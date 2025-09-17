@@ -1,0 +1,207 @@
+<!-- Machine Type Modal -->
+<div th:fragment="machine-type-modal">
+    <div class="modal fade" id="addMachineTypeModal" tabindex="-1" role="dialog"
+        aria-labelledby="addMachineTypeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addMachineTypeModalLabel">Add Machine Type</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/code-generator/save-machine-type}" method="post" id="addMachineTypeForm">
+                        <div class="form-group">
+                            <label for="machineTypeName">Name</label>
+                            <input type="text" class="form-control" id="machineTypeName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="machineTypeCode">Code</label>
+                            <input type="text" class="form-control" id="machineTypeCode" name="code" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Category Modal -->
+<div th:fragment="category-modal">
+    <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCategoryModalLabel">Add Category</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/code-generator/save-category}" method="post" id="addCategoryForm">
+                        <div class="form-group">
+                            <label for="categoryName">Name</label>
+                            <input type="text" class="form-control" id="categoryName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoryCode">Code</label>
+                            <input type="text" class="form-control" id="categoryCode" name="code" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoryMachineType">Machine Type</label>
+                            <select class="form-control" id="categoryMachineType" name="machineTypeId" required>
+                                <option value="">Select Machine Type</option>
+                                <option th:each="machineType : ${machineTypes}" th:value="${machineType.id}"
+                                    th:text="${machineType.name}"></option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Subcategory Modal -->
+<div th:fragment="subcategory-modal">
+    <div class="modal fade" id="addSubcategoryModal" tabindex="-1" role="dialog"
+        aria-labelledby="addSubcategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addSubcategoryModalLabel">Add Subcategory</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/code-generator/save-subcategory}" method="post" id="addSubcategoryForm">
+                        <div class="form-group">
+                            <label for="subcategoryName">Name</label>
+                            <input type="text" class="form-control" id="subcategoryName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subcategoryCode">Code</label>
+                            <input type="text" class="form-control" id="subcategoryCode" name="code" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subcategoryCategory">Category</label>
+                            <select class="form-control" id="Category" name="categoryId" required>
+                                <option value="">Select Category</option>
+                                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Serial Number Modal -->
+<div th:fragment="serial-number-modal"></div>
+    <div class="modal fade" id="addSerialNumberModal" tabindex="-1" role="dialog" aria-labelledby="addSerialNumberModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addSerialNumberModalLabel">Add Serial Number</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/code-generator/save-serial-number}" method="post" id="addSerialNumberForm">
+                        <div class="form-group">
+                            <label for="serialNumberCode">Code (2 Alphanumeric)</label>
+                            <input type="text" class="form-control" id="serialNumberCode" name="code" maxlength="2" placeholder="e.g., A1, XY" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="serialNumberDescription">Description</label>
+                            <input type="text" class="form-control" id="serialNumberDescription" name="description" placeholder="e.g., Batch 01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="serialNumberSubcategory">Subcategory</label>
+                            <select class="form-control" id="serialNumberSubcategory" name="subcategoryId" required>
+                                <option value="">Select Subcategory</option>
+                                <option th:each="subcat : ${subcategories}" th:value="${subcat.id}" th:text="${subcat.name}"></option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Supplier Modal -->
+<div th:fragment="supplier-modal">
+    <div class="modal fade" id="addSupplierModal" tabindex="-1" role="dialog" aria-labelledby="addSupplierModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addSupplierModalLabel">Add Supplier</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/code-generator/save-supplier}" method="post" id="addSupplierForm">
+                        <div class="form-group">
+                            <label for="supplierCode">Code</label>
+                            <input type="text" class="form-control" id="supplierCode" name="code" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="supplierName">Name</label>
+                            <input type="text" class="form-control" id="supplierName" name="name" required>
+                        </div>
+                        <!-- <div class="form-group">
+                            <label for="supplierSubcategory">Subcategory</label>
+                            <select class="form-control" id="supplierSubcategory" name="subcategoryId" required>
+                                <option value="">Select Subcategory</option>
+                                <option th:each="subcat : ${subcategories}" th:value="${subcat.id}" th:text="${subcat.name}"></option>
+                            </select>
+                        </div> -->
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section Modal -->
+<div th:fragment="section-modal">
+    <div class="modal fade" id="addSectionModal" tabindex="-1" role="dialog" aria-labelledby="addSectionModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addSectionModalLabel">Add Section</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addSectionForm">
+                        <div class="form-group">
+                            <label for="sectionName">Name</label>
+                            <input type="text" class="form-control" id="sectionName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sectionCode">Code</label>
+                            <input type="text" class="form-control" id="sectionCode" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

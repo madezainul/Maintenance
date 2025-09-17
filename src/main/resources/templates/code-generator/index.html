@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{layouts/dashboard}">
+
+<head>
+    <!-- Include CSS and fonts as in original -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/atlantis.min.css">
+</head>
+
+<body>
+
+    <div layout:fragment="content">
+        <div class="page-inner">
+            <div class="page-header">
+                <h4 class="page-title" th:text="${title}"></h4>
+                <ul class="breadcrumbs">
+                    <li class="nav-home">
+                        <i class="fas fa-clipboard-list"></i>
+                    </li>
+                    <li class="separator">
+                        <i class="flaticon-right-arrow"></i>
+                    </li>
+                    <li class="nav-item">
+                        <a>Menu</a>
+                    </li>
+                    <li class="separator">
+                        <i class="flaticon-right-arrow"></i>
+                    </li>
+                    <li class="nav-item">
+                        <a th:text="${title}"></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Generate Item Code</h4>
+                        </div>
+                        <div class="card-body">
+
+                            <!-- Code Generator Form -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <!-- Machine Type -->
+                                        <label>Machine Type <span class="text-danger">*</span></label>
+                                        <div class="d-flex align-items-center">
+                                            <input type="text" class="form-control" id="machineTypeInput"
+                                                placeholder="Search machine type by name or ID" autocomplete="off"
+                                                required />
+                                            <div id="machineTypeDropdown" class="dropdown-menu w-100"
+                                                style="position: absolute; z-index: 1000; display: none; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-top: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                            </div>
+                                            <select class="d-none" name="machineType" id="machineTypeSelect">
+                                                <option th:each="mt : ${machineTypes}" th:value="${mt.id}"
+                                                    th:text="${mt.code + ' - ' + mt.name}"></option>
+                                            </select>
+
+                                            <datalist id="machineTypeOptions">
+                                                <option th:each="mt : ${machineTypes}"
+                                                    th:value="${mt.name} + ' (' + ${mt.id} + ')'"
+                                                    th:data-machine-type-id="${mt.id}">
+                                                </option>
+                                            </datalist>
+                                            <div th:replace="~{fragments/cg-modal :: machine-type-modal}"></div>
+                                            <button class="btn btn-primary ml-2" data-toggle="modal"
+                                                data-target="#addMachineTypeModal">
+                                                <i class="fa fa-plus-circle mr-2"></i> Add
+                                            </button>
+                                            <button class="btn btn-secondary ml-2"><i class="fa fa-eye mr-2"></i>
+                                                View</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <!-- Category -->
+                                    <div class="form-group">
+                                        <label>Category <span class="text-danger">*</span></label>
+                                        <div class="d-flex align-items-center">
+                                            <input type="text" class="form-control" id="categoryInput"
+                                                placeholder="Search category by name or ID" autocomplete="off"
+                                                required />
+                                            <div id="categoryDropdown" class="dropdown-menu w-100"
+                                                style="position: absolute; z-index: 1000; display: none; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-top: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                            </div>
+                                            <select class="d-none" name="category" id="categorySelect">
+                                                <option th:each="cat : ${categories}" th:value="${cat.id}"
+                                                    th:text="${cat.code + ' - ' + cat.name}"></option>
+                                            </select>
+
+                                            <datalist id="categoryOptions">
+                                                <option th:each="cat : ${categories}"
+                                                    th:value="${cat.name} + ' (' + ${cat.id} + ')'"
+                                                    th:data-category-id="${cat.id}">
+                                                </option>
+                                            </datalist>
+                                            <div th:replace="~{fragments/cg-modal :: category-modal}"></div>
+                                            <button class="btn btn-primary ml-2" data-toggle="modal"
+                                                data-target="#addCategoryModal">
+                                                <i class="fa fa-plus-circle mr-2"></i> Add
+                                            </button>
+                                            <button class="btn btn-secondary ml-2"><i class="fa fa-eye mr-2"></i>
+                                                View</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- Subcategory -->
+                                    <div class="form-group">
+                                        <label>Subcategory <span class="text-danger">*</span></label>
+                                        <div class="d-flex align-items-center">
+                                            <input type="text" class="form-control" id="subcategoryInput"
+                                                placeholder="Search subcategory by name or ID" autocomplete="off"
+                                                required />
+                                            <div id="subcategoryDropdown" class="dropdown-menu w-100"
+                                                style="position: absolute; z-index: 1000; display: none; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-top: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                            </div>
+                                            <select class="d-none" name="subcategory" id="subcategorySelect">
+                                                <option th:each="subcat : ${subcategories}" th:value="${subcat.id}"
+                                                    th:text="${subcat.code + ' - ' + subcat.name}"></option>
+                                            </select>
+
+                                            <datalist id="subcategoryOptions">
+                                                <option th:each="subcat : ${subcategories}"
+                                                    th:value="${subcat.name} + ' (' + ${subcat.id} + ')'"
+                                                    th:data-subcategory-id="${subcat.id}">
+                                                </option>
+                                            </datalist>
+                                            <div th:replace="~{fragments/cg-modal :: subcategory-modal}"></div>
+                                            <button class="btn btn-primary ml-2" data-toggle="modal"
+                                                data-target="#addSubcategoryModal">
+                                                <i class="fa fa-plus-circle mr-2"></i> Add
+                                            </button>
+                                            <button class="btn btn-secondary ml-2"><i class="fa fa-eye mr-2"></i>
+                                                View</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Serial Number <span class="text-danger">*</span></label>
+                                        <div class="d-flex align-items-center">
+                                            <input type="text" class="form-control" id="serialNumberInput"
+                                                placeholder="Search serial number by name or ID" autocomplete="off"
+                                                required />
+                                            <div id="serialNumberDropdown" class="dropdown-menu w-100"
+                                                style="position: absolute; z-index: 1000; display: none; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-top: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                            </div>
+                                            <select class="d-none" name="serialNumber" id="serialNumberSelect">
+                                                <option th:each="sn : ${serialNumbers}" th:value="${sn.id}"
+                                                    th:text="${sn.code + ' - ' + sn.name}"></option>
+                                            </select>
+
+                                            <datalist id="serialNumberOptions">
+                                                <option th:each="sn : ${serialNumbers}"
+                                                    th:value="${sn.name} + ' (' + ${sn.id} + ')'"
+                                                    th:data-serial-number-id="${sn.id}">
+                                                </option>
+                                            </datalist>
+                                            <div th:replace="~{fragments/cg-modal :: serial-number-modal}"></div>
+                                            <button class="btn btn-primary ml-2" data-toggle="modal"
+                                                data-target="#addSerialNumberModal">
+                                                <i class="fa fa-plus-circle mr-2"></i> Add
+                                            </button>
+                                            <button class="btn btn-secondary ml-2"><i class="fa fa-eye mr-2"></i>
+                                                View</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Supplier</label>
+                                        <div class="d-flex align-items-center">
+                                            <input type="text" class="form-control" id="supplierInput"
+                                                placeholder="Enter Supplier" required />
+                                            <div th:replace="~{fragments/cg-modal :: supplier-modal}"></div>
+                                            <button class="btn btn-primary ml-2" data-toggle="modal"
+                                                data-target="#addSupplierModal">
+                                                <i class="fa fa-plus-circle mr-2"></i> Add
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Supplier</label>
+                                        <div class="d-flex align-items-center">
+                                            <input type="text" class="form-control" id="supplierInput"
+                                                placeholder="Enter Supplier" required />
+                                            <div th:replace="~{fragments/cg-modal :: supplier-modal}"></div>
+
+                                            <button class="btn btn-primary ml-2" data-toggle="modal"
+                                                data-target="#addSupplierModal">
+                                                <i class="fa fa-plus-circle mr-2"></i> Add
+                                            </button>
+                                            <button class="btn btn-secondary ml-2"><i class="fa fa-eye mr-2"></i>
+                                                View</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Section</label>
+                                        <div class="d-flex align-items-center">
+                                            <input type="text" class="form-control" id="sectionInput"
+                                                placeholder="Enter Section" required />
+                                            <div th:replace="~{fragments/cg-modal :: section-modal}"></div>
+                                            <button class="btn btn-primary ml-2" data-toggle="modal"
+                                                data-target="#addSectionModal">
+                                                <i class="fa fa-plus-circle mr-2"></i> Add
+                                            </button>
+                                            <button class="btn btn-secondary ml-2"><i class="fa fa-eye mr-2"></i>
+                                                View</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Generated Code & Save Form -->
+                            <div class="row align-items-center mt-4">
+                                <div class="col-md-6 d-flex justify-content-center">
+                                    <button class="btn btn-success" id="generateBtn">Generate Code</button>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Generated Code</label>
+                                        <textarea id="generatedCode" class="form-control" rows="5" readonly></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3" id="saveForm" style="display:none;">
+                                <div class="col-md-12">
+                                    <h5>Save Item</h5>
+                                    <form action="/code-generator/save-item" method="post">
+                                        <input type="hidden" name="code" id="finalCode" />
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Name</label>
+                                                    <input type="text" name="name" class="form-control" required />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Stock</label>
+                                                    <input type="number" name="stock" class="form-control" required />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- <input type="hidden" name="subcategoryId" id="hidSubcat" /> -->
+                                        <input type="hidden" name="serialNumberId" id="hidSn" />
+                                        <input type="hidden" name="supplierId" id="hidSupplier" />
+                                        <button type="submit" class="btn btn-primary">Save Item</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Success/Error Messages -->
+                            <div th:if="${message}" class="alert alert-success mt-3">
+                                [[${message}]]
+                            </div>
+                            <div th:if="${error}" class="alert alert-danger mt-3">
+                                [[${error}]]
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Files -->
+    <script src="/assets/js/core/jquery.3.2.1.min.js"></script>
+    <script src="/assets/js/core/popper.min.js"></script>
+    <script src="/assets/js/core/bootstrap.min.js"></script>
+
+    <!-- <script>
+        Live search for Machine Type
+        function setupLiveSearch(inputId, selectId, optionsContainerId, fieldLabel = 'item') {
+            console.log('event triggered');
+            const input = document.getElementById(inputId);
+            const select = document.getElementById(selectId);
+            const dropdown = document.getElementById(`${inputId.replace('Input', 'Dropdown')}`);
+            const options = Array.from(select.options)
+                .filter(opt => opt.value) // skip empty option
+                .map(opt => ({
+                    value: opt.value,
+                    label: opt.text,
+                    id: opt.dataset.id || opt.dataset.code || ''
+                }));
+
+            if (!input || !select || !dropdown) {
+                console.warn(`Missing elements for ${inputId}`);
+                return;
+            }
+
+        Filter and show dropdown
+        input.addEventListener('input', function () {
+            console.log('Input event triggered'); // Debugging log
+            const term = this.value.toLowerCase().trim();
+            dropdown.innerHTML = '';
+
+            console.log('Current input value:', this.value);
+            console.log('Options array:', options);
+
+            if (term === '') {
+                console.log('Input is empty, hiding dropdown.');
+                dropdown.style.display = 'none';
+                select.value = '';
+                return;
+            }
+
+            const filtered = options.filter(opt =>
+                opt.label.toLowerCase().includes(term)
+            );
+
+            console.log('Filtered options:', filtered);
+
+            if (filtered.length === 0) {
+                console.log('No matches found, hiding dropdown.');
+                dropdown.style.display = 'none';
+                return;
+            }
+
+            filtered.forEach(opt => {
+                const div = document.createElement('div');
+                div.className = 'dropdown-item';
+                div.style.cursor = 'pointer';
+                div.style.whiteSpace = 'normal';
+
+                // Highlight matched text
+                const regex = new RegExp(`(${term})`, 'gi');
+                const highlighted = opt.label.replace(regex, '<strong>$1</strong>');
+                div.innerHTML = highlighted;
+
+                div.addEventListener('click', () => {
+                    console.log('Dropdown item clicked:', opt);
+                    input.value = opt.label;
+                    select.value = opt.value; // <-- use value, not id
+                    dropdown.style.display = 'none';
+                    input.focus();
+                });
+
+                dropdown.appendChild(div);
+            });
+
+            console.log('Dropdown should now be visible with items.');
+            dropdown.style.display = 'block';
+        });
+
+        Ensure dropdown visibility is toggled correctly
+        input.addEventListener('focus', function () {
+            if (dropdown.innerHTML.trim() !== '') {
+                dropdown.style.display = 'block';
+            }
+        });
+
+        input.addEventListener('blur', function () {
+            setTimeout(() => dropdown.style.display = 'none', 200);
+        });
+
+        Hide dropdown when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        Navigate with keyboard
+            input.addEventListener('keydown', function (e) {
+                const items = dropdown.querySelectorAll('.dropdown-item');
+                if (items.length === 0) return;
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    let current = Array.from(items).findIndex(item => item.classList.contains('active'));
+                    current = (current + 1) % items.length;
+                    items.forEach(item => item.classList.remove('active'));
+                    items[current].classList.add('active');
+                    items[current].scrollIntoView({ block: 'nearest' });
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    let current = Array.from(items).findIndex(item => item.classList.contains('active'));
+                    current = current <= 0 ? items.length - 1 : current - 1;
+                    items.forEach(item => item.classList.remove('active'));
+                    items[current].classList.add('active');
+                    items[current].scrollIntoView({ block: 'nearest' });
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const active = dropdown.querySelector('.dropdown-item.active');
+                    if (active) {
+                        active.click();
+                    }
+                } else if (e.key === 'Escape') {
+                    dropdown.style.display = 'none';
+                }
+            });
+        }
+        $(document).ready(function () {
+            setupLiveSearch('machineTypeInput', 'machineTypeSelect', 'machineTypeOptions');
+            // ... your other code ...
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            setupLiveSearch('machineTypeInput', 'machineTypeSelect', 'machineTypeOptions');
+        });
+
+        setupLiveSearch('machineTypeInput', 'machineTypeSelect', 'machineTypeOptions');
+    </script> -->
+
+    <!-- <script th:inline="javascript">
+        $(document).ready(function () {
+
+            function showAlert(msg, type = 'success') {
+                const alertHtml = `
+            <div class="alert alert-${type} alert-dismissible fade show mt-2" role="alert">
+                ${msg}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>`;
+                $('.card-body').prepend(alertHtml);
+                setTimeout(() => $('.alert').alert('close'), 3000);
+            }
+
+            // Generic save function
+            function saveEntity(url, data, onSuccess) {
+                $.ajax({
+                    url: '/code-generator' + url,
+                    method: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    success: function (res) {
+                        if (res.success) {
+                            $('#add' + url.split('-')[1].split('').map((c, i) => i === 0 ? c.toUpperCase() : c).join('') + 'Modal')
+                                .modal('hide');
+                            onSuccess(res.data);
+                            showAlert("Saved successfully!");
+                        } else {
+                            alert("Error: " + res.error);
+                        }
+                    },
+                    error: function () {
+                        alert("Request failed.");
+                    }
+                });
+            }
+
+            // Save Machine Type
+            $('#saveMachineTypeButton').click(function () {
+                const code = $('#mtCode').val().trim().toUpperCase();
+                const name = $('#mtName').val().trim();
+                if (!code || !name) return alert('Fill all fields.');
+
+                saveEntity('/save-machine-type', { code, name }, function (data) {
+                    $('#machine-type').append(`<option value="${data.id}" data-code="${data.code}">${data.code} - ${data.name}</option>`);
+                    $('#machine-type').val(data.id);
+                });
+            });
+
+            Similarly implement for Category, Subcategory, Supplier, Section,
+            Follow same pattern: send code+name(+parentId), append option, select it.
+        });
+    </script> -->
+
+    <!-- <script>
+        $(document).ready(function () {
+            const API_URL = 'code-generator/generate';
+
+            // Load Categories when Machine Type changes
+            $('#machineType').change(function () {
+                const mtId = $(this).val();
+                if (!mtId) {
+                    $('#category').html('<option value="">Select Machine First</option>');
+                    $('#subcategory').html('<option value="">Select Category First</option>');
+                    $('#serialNumber').html('<option value="">Select Subcategory First</option>');
+                    return;
+                }
+
+                $.get('/api/categories?machineTypeId=' + mtId, function (data) {
+                    let opts = '<option value="">Select</option>';
+                    data.forEach(c => opts += `<option value="${c.id}">${c.code} - ${c.name}</option>`);
+                    $('#category').html(opts);
+                });
+            });
+
+            // Load Subcategories
+            $('#category').change(function () {
+                const catId = $(this).val();
+                if (!catId) {
+                    $('#subcategory').html('<option value="">Select Category First</option>');
+                    return;
+                }
+
+                $.get('/api/subcategories?categoryId=' + catId, function (data) {
+                    let opts = '<option value="">Select</option>';
+                    data.forEach(s => opts += `<option value="${s.id}">${s.code} - ${s.name}</option>`);
+                    $('#subcategory').html(opts);
+                });
+            });
+
+            // Generate Code
+            $('#generateBtn').click(function () {
+                const payload = {
+                    machineTypeId: $('#machineType').val(),
+                    categoryId: $('#category').val(),
+                    subcategoryId: $('#subcategory').val(),
+                    serialNumberId: $('#serialNumber').val(),
+                    supplierId: $('#supplier').val(),
+                    sectionId: $('#section').val()
+                };
+
+                $.ajax({
+                    url: API_URL,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(payload),
+                    success: function (res) {
+                        if (res.success === 'true') {
+                            $('#generatedCode').val(res.code);
+                            $('#finalCode').val(res.code);
+                            $('#hidSubcat').val(payload.subcategoryId);
+                            $('#hidSn').val(payload.serialNumberId);
+                            $('#hidSupplier').val(payload.supplierId);
+                            $('#saveForm').show();
+                        } else {
+                            alert('Error: ' + res.error);
+                        }
+                    },
+                    error: function () {
+                        alert('Failed to generate code.');
+                    }
+                });
+            });
+        });
+    </script> -->
+    <!-- <script>
+        alert('Script loaded!');
+    </script> -->
+</body>
+
+<!-- <script>
+        alert('Script loaded!');
+        function setupLiveSearch(inputId, selectId, optionsContainerId, fieldLabel = 'item') {
+            console.log('setupLiveSearch function loaded');
+            const input = document.getElementById(inputId);
+            const select = document.getElementById(selectId);
+            const dropdown = document.getElementById(`${inputId.replace('Input', 'Dropdown')}`);
+            const options = Array.from(select.options)
+                .filter(opt => opt.value) // skip empty option
+                .map(opt => ({
+                    value: opt.value,
+                    label: opt.text,
+                    id: opt.dataset.id || opt.dataset.code || ''
+                }));
+
+            if (!input || !select || !dropdown) {
+                console.warn(`Missing elements for ${inputId}`);
+                return;
+            }
+
+            input.addEventListener('input', function () {
+                console.log('Input event triggered');
+                const term = this.value.toLowerCase().trim();
+                dropdown.innerHTML = '';
+                console.log('Current input value:', this.value);
+                console.log('Options array:', options);
+                if (term === '') {
+                    console.log('Input is empty, hiding dropdown.');
+                    dropdown.style.display = 'none';
+                    select.value = '';
+                    return;
+                }
+                const filtered = options.filter(opt =>
+                    opt.label.toLowerCase().includes(term)
+                );
+                console.log('Filtered options:', filtered);
+                if (filtered.length === 0) {
+                    console.log('No matches found, hiding dropdown.');
+                    dropdown.style.display = 'none';
+                    return;
+                }
+                filtered.forEach(opt => {
+                    const div = document.createElement('div');
+                    div.className = 'dropdown-item';
+                    div.style.cursor = 'pointer';
+                    div.style.whiteSpace = 'normal';
+                    const regex = new RegExp(`(${term})`, 'gi');
+                    const highlighted = opt.label.replace(regex, '<strong>$1</strong>');
+                    div.innerHTML = highlighted;
+                    div.addEventListener('click', () => {
+                        console.log('Dropdown item clicked:', opt);
+                        input.value = opt.label;
+                        select.value = opt.value;
+                        dropdown.style.display = 'none';
+                        input.focus();
+                    });
+                    dropdown.appendChild(div);
+                });
+                console.log('Dropdown should now be visible with items.');
+                dropdown.style.display = 'block';
+            });
+            document.addEventListener('click', function (e) {
+                if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+            input.addEventListener('keydown', function (e) {
+                const items = dropdown.querySelectorAll('.dropdown-item');
+                if (items.length === 0) return;
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    let current = Array.from(items).findIndex(item => item.classList.contains('active'));
+                    current = (current + 1) % items.length;
+                    items.forEach(item => item.classList.remove('active'));
+                    items[current].classList.add('active');
+                    items[current].scrollIntoView({ block: 'nearest' });
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    let current = Array.from(items).findIndex(item => item.classList.contains('active'));
+                    current = current <= 0 ? items.length - 1 : current - 1;
+                    items.forEach(item => item.classList.remove('active'));
+                    items[current].classList.add('active');
+                    items[current].scrollIntoView({ block: 'nearest' });
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const active = dropdown.querySelector('.dropdown-item.active');
+                    if (active) {
+                        active.click();
+                    }
+                } else if (e.key === 'Escape') {
+                    dropdown.style.display = 'none';
+                }
+            });
+        }
+        $(document).ready(function () {
+            console.log('Calling setupLiveSearch');
+            setupLiveSearch('machineTypeInput', 'machineTypeSelect', 'machineTypeOptions');
+        });
+    </script> -->
+
+</html>
+
+<th:block layout:fragment="scripts">
+    <!-- LIVESCRIPT-CHECK: The following script should appear in your page source! -->
+    <script>
+        alert('LIVESCRIPT-CHECK: If you see this, the script is running!');
+        function setupLiveSearch(inputId, selectId, optionsContainerId, fieldLabel = 'item') {
+            console.log('setupLiveSearch function loaded');
+            const input = document.getElementById(inputId);
+            const select = document.getElementById(selectId);
+            const dropdown = document.getElementById(`${inputId.replace('Input', 'Dropdown')}`);
+            const options = Array.from(select.options)
+                .filter(opt => opt.value) // skip empty option
+                .map(opt => ({
+                    value: opt.value,
+                    label: opt.text,
+                    id: opt.dataset.id || opt.dataset.code || ''
+                }));
+
+            if (!input || !select || !dropdown) {
+                console.warn(`Missing elements for ${inputId}`);
+                return;
+            }
+
+            input.addEventListener('input', function () {
+                console.log('Input event triggered');
+                const term = this.value.toLowerCase().trim();
+                dropdown.innerHTML = '';
+                console.log('Current input value:', this.value);
+                console.log('Options array:', options);
+                if (term === '') {
+                    console.log('Input is empty, hiding dropdown.');
+                    dropdown.style.display = 'none';
+                    select.value = '';
+                    return;
+                }
+                const filtered = options.filter(opt =>
+                    opt.label.toLowerCase().includes(term)
+                );
+                console.log('Filtered options:', filtered);
+                if (filtered.length === 0) {
+                    console.log('No matches found, hiding dropdown.');
+                    dropdown.style.display = 'none';
+                    return;
+                }
+                filtered.forEach(opt => {
+                    const div = document.createElement('div');
+                    div.className = 'dropdown-item';
+                    div.style.cursor = 'pointer';
+                    div.style.whiteSpace = 'normal';
+                    const regex = new RegExp(`(${term})`, 'gi');
+                    const highlighted = opt.label.replace(regex, '<strong>$1</strong>');
+                    div.innerHTML = highlighted;
+                    div.addEventListener('click', () => {
+                        console.log('Dropdown item clicked:', opt);
+                        input.value = opt.label;
+                        select.value = opt.value;
+                        dropdown.style.display = 'none';
+                        input.focus();
+                    });
+                    dropdown.appendChild(div);
+                });
+                console.log('Dropdown should now be visible with items.');
+                dropdown.style.display = 'block';
+            });
+            document.addEventListener('click', function (e) {
+                if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+            input.addEventListener('keydown', function (e) {
+                const items = dropdown.querySelectorAll('.dropdown-item');
+                if (items.length === 0) return;
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    let current = Array.from(items).findIndex(item => item.classList.contains('active'));
+                    current = (current + 1) % items.length;
+                    items.forEach(item => item.classList.remove('active'));
+                    items[current].classList.add('active');
+                    items[current].scrollIntoView({ block: 'nearest' });
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    let current = Array.from(items).findIndex(item => item.classList.contains('active'));
+                    current = current <= 0 ? items.length - 1 : current - 1;
+                    items.forEach(item => item.classList.remove('active'));
+                    items[current].classList.add('active');
+                    items[current].scrollIntoView({ block: 'nearest' });
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const active = dropdown.querySelector('.dropdown-item.active');
+                    if (active) {
+                        active.click();
+                    }
+                } else if (e.key === 'Escape') {
+                    dropdown.style.display = 'none';
+                }
+            });
+        }
+        $(document).ready(function () {
+            console.log('Calling setupLiveSearch');
+            setupLiveSearch('machineTypeInput', 'machineTypeSelect', 'machineTypeOptions');
+            setupLiveSearch('categoryInput', 'categorySelect', 'categoryOptions');
+            setupLiveSearch('subcategoryInput', 'subcategorySelect', 'subcategoryOptions');
+        });
+    </script>
+</th:block>
