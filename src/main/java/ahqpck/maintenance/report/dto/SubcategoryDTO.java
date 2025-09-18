@@ -18,8 +18,4 @@ public class SubcategoryDTO {
     private String name;
     
     private CategoryDTO category;
-
-    // public String getCategoryCode() {
-    //     return category != null ? category.getCode() : null;
-    // }
 }

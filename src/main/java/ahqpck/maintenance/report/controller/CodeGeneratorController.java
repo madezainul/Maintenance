@@ -10,19 +10,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import ahqpck.maintenance.report.dto.AreaDTO;
 import ahqpck.maintenance.report.dto.CategoryDTO;
 import ahqpck.maintenance.report.dto.DTOMapper;
-import ahqpck.maintenance.report.dto.EquipmentDTO;
 import ahqpck.maintenance.report.dto.MachineTypeDTO;
 import ahqpck.maintenance.report.dto.SectionDTO;
 import ahqpck.maintenance.report.dto.SerialNumberDTO;
 import ahqpck.maintenance.report.dto.SubcategoryDTO;
 import ahqpck.maintenance.report.dto.SupplierDTO;
-import ahqpck.maintenance.report.entity.Subcategory;
 import ahqpck.maintenance.report.service.CategoryService;
 import ahqpck.maintenance.report.service.MachineTypeService;
 import ahqpck.maintenance.report.service.SectionService;
@@ -68,6 +65,15 @@ public class CodeGeneratorController {
 
         model.addAttribute("sections", sectionService.getAll().stream()
                 .map(dtoMapper::mapToSectionDTO).collect(Collectors.toList()));
+
+        // modal category
+        model.addAttribute("categoryDTO", new CategoryDTO());
+
+        // modal subcategory
+        model.addAttribute("subcategoryDTO", new SubcategoryDTO());
+
+        // modal serial number
+        model.addAttribute("serialNumberDTO", new SerialNumberDTO());
 
         return "code-generator/index";
     }

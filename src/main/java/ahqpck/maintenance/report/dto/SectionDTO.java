@@ -13,7 +13,4 @@ public class SectionDTO {
 
     @NotBlank(message = "Code is mandatory")
     private String code;
-
-    @NotBlank(message = "Name is mandatory")
-    private String name;
 }

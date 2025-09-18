@@ -2,7 +2,6 @@ package ahqpck.maintenance.report.controller;
 
 import ahqpck.maintenance.report.dto.AreaDTO;
 import ahqpck.maintenance.report.dto.ComplaintDTO;
-import ahqpck.maintenance.report.dto.EquipmentDTO;
 import ahqpck.maintenance.report.dto.UserDTO;
 import ahqpck.maintenance.report.entity.User;
 import ahqpck.maintenance.report.repository.UserRepository;
