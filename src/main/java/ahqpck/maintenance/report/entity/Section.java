@@ -24,8 +24,8 @@ public class Section {
     @Column(length = 22, updatable = false, nullable = false)
     private String id;
 
-    @Column(nullable = false, length = 2, unique = true)
-    @Size(max = 2)
+    @Column(nullable = false, length = 3, unique = true)
+    @Size(max = 3)
     private String code;
 
     @PrePersist

@@ -6,8 +6,6 @@ import ahqpck.maintenance.report.exception.NotFoundException;
 import ahqpck.maintenance.report.repository.PartRepository;
 import ahqpck.maintenance.report.specification.PartSpecification;
 import ahqpck.maintenance.report.util.FileUploadUtil;
-import ahqpck.maintenance.report.util.ImportUtil;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -29,10 +27,8 @@ public class PartService {
     private String uploadDir;
 
     private final PartRepository partRepository;
-    private final Validator validator;
 
     private final FileUploadUtil fileUploadUtil;
-    private final ImportUtil importUtil;
 
     public Page<PartDTO> getAllParts(String keyword, int page, int size, String sortBy, boolean asc) {
         Sort sort = asc ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
@@ -51,7 +47,6 @@ public class PartService {
     }
 
     public void createPart(PartDTO dto, MultipartFile imageFile) {
-
         if (partRepository.existsByCodeIgnoreCase(dto.getCode())) {
             throw new IllegalArgumentException("Part with this code already exists.");
         }
@@ -60,8 +55,9 @@ public class PartService {
         part.setCode(dto.getCode().trim());
         part.setName(dto.getName().trim());
         part.setDescription(dto.getDescription());
-        part.setCategory(dto.getCategory());
-        part.setSupplier(dto.getSupplier());
+        part.setCategoryName(dto.getCategoryName());
+        part.setSupplierName(dto.getSupplierName());
+        part.setSectionCode(dto.getSectionCode());
         part.setStockQuantity(dto.getStockQuantity() != null ? dto.getStockQuantity() : 0);
 
         if (imageFile != null && !imageFile.isEmpty()) {
@@ -118,8 +114,9 @@ public class PartService {
         part.setCode(dto.getCode().trim());
         part.setName(dto.getName().trim());
         part.setDescription(dto.getDescription());
-        part.setCategory(dto.getCategory());
-        part.setSupplier(dto.getSupplier());
+        part.setCategoryName(dto.getCategoryName());
+        part.setSupplierName(dto.getSupplierName());
+        part.setSectionCode(dto.getSectionCode());
         part.setStockQuantity(dto.getStockQuantity() != null ? dto.getStockQuantity() : 0);
     }
 
@@ -129,8 +126,9 @@ public class PartService {
         dto.setCode(part.getCode());
         dto.setName(part.getName());
         dto.setDescription(part.getDescription());
-        dto.setCategory(part.getCategory());
-        dto.setSupplier(part.getSupplier());
+        dto.setCategoryName(part.getCategoryName());
+        dto.setSupplierName(part.getSupplierName());
+        dto.setSectionCode(part.getSectionCode());
         dto.setImage(part.getImage());
         dto.setStockQuantity(part.getStockQuantity());
         return dto;

@@ -1,7 +1,15 @@
 package ahqpck.maintenance.report.controller;
 
+import ahqpck.maintenance.report.dto.CategoryDTO;
+import ahqpck.maintenance.report.dto.DTOMapper;
 import ahqpck.maintenance.report.dto.PartDTO;
+import ahqpck.maintenance.report.dto.SerialNumberDTO;
+import ahqpck.maintenance.report.dto.SubcategoryDTO;
+import ahqpck.maintenance.report.dto.SupplierDTO;
+import ahqpck.maintenance.report.service.CategoryService;
 import ahqpck.maintenance.report.service.PartService;
+import ahqpck.maintenance.report.service.SectionService;
+import ahqpck.maintenance.report.service.SupplierService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +30,10 @@ import java.util.stream.Collectors;
 public class PartController {
 
     private final PartService partService;
+    private final CategoryService categoryService;
+    private final SupplierService supplierService;
+    private final SectionService sectionService;
+    private final DTOMapper dtoMapper;
 
     @GetMapping
     public String listParts(
@@ -44,6 +56,24 @@ public class PartController {
             model.addAttribute("title", "Parts Inventory");
             model.addAttribute("sortFields", new String[] { "code", "name", "category", "supplier", "stockQuantity" });
             model.addAttribute("partDTO", new PartDTO());
+            
+            model.addAttribute("categories", categoryService.getAll().stream()
+                    .map(dtoMapper::mapToCategoryDTO).collect(Collectors.toList()));
+
+            model.addAttribute("suppliers", supplierService.getAll().stream()
+                    .map(dtoMapper::mapToSupplierDTO).collect(Collectors.toList()));
+
+            model.addAttribute("sections", sectionService.getAll().stream()
+                .map(dtoMapper::mapToSectionDTO).collect(Collectors.toList()));
+
+            model.addAttribute("editCategories", categoryService.getAll().stream()
+                    .map(dtoMapper::mapToCategoryDTO).collect(Collectors.toList()));
+
+            model.addAttribute("editSuppliers", supplierService.getAll().stream()
+                    .map(dtoMapper::mapToSupplierDTO).collect(Collectors.toList()));
+            
+            model.addAttribute("editSections", sectionService.getAll().stream()
+                .map(dtoMapper::mapToSectionDTO).collect(Collectors.toList()));
 
         } catch (Exception e) {
             model.addAttribute("error", "Failed to load parts: " + e.getMessage());

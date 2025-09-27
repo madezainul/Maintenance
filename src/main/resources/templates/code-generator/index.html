@@ -48,7 +48,7 @@
                                         <label>Machine Type <span class="text-danger">*</span></label>
                                         <div class="d-flex align-items-center">
                                             <input type="text" class="form-control" id="machineTypeInput"
-                                                placeholder="Search machine type by name or ID" autocomplete="off"
+                                                placeholder="Search machine type by Name or Code" autocomplete="off"
                                                 required />
                                             <div id="machineTypeDropdown" class="dropdown-menu w-100"
                                                 style="position: absolute; z-index: 1000; display: none; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-top: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
@@ -82,7 +82,7 @@
                                         <label>Category <span class="text-danger">*</span></label>
                                         <div class="d-flex align-items-center">
                                             <input type="text" class="form-control" id="categoryInput"
-                                                placeholder="Search category by name or ID" autocomplete="off"
+                                                placeholder="Search category by Name or Code" autocomplete="off"
                                                 required />
                                             <div id="categoryDropdown" class="dropdown-menu w-100"
                                                 style="position: absolute; z-index: 1000; display: none; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-top: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
@@ -117,7 +117,7 @@
                                         <label>Subcategory <span class="text-danger">*</span></label>
                                         <div class="d-flex align-items-center">
                                             <input type="text" class="form-control" id="subcategoryInput"
-                                                placeholder="Search subcategory by name or ID" autocomplete="off"
+                                                placeholder="Search subcategory by Name or Code" autocomplete="off"
                                                 required />
                                             <div id="subcategoryDropdown" class="dropdown-menu w-100"
                                                 style="position: absolute; z-index: 1000; display: none; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-top: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
@@ -145,10 +145,10 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Serial Number <span class="text-danger">*</span></label>
+                                        <label>Capacity/Part Number <span class="text-danger">*</span></label>
                                         <div class="d-flex align-items-center">
                                             <input type="text" class="form-control" id="serialNumberInput"
-                                                placeholder="Search serial number by name or ID" autocomplete="off"
+                                                placeholder="Search Capacity/Part Number" autocomplete="off"
                                                 required />
                                             <div id="serialNumberDropdown" class="dropdown-menu w-100"
                                                 style="position: absolute; z-index: 1000; display: none; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-top: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
@@ -178,10 +178,10 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Supplier</label>
+                                        <label>Supplier/SN</label>
                                         <div class="d-flex align-items-center">
                                             <input type="text" class="form-control" id="supplierInput"
-                                                placeholder="Enter Supplier" required />
+                                                placeholder="Search Supplier/SN" required />
                                             <div id="supplierDropdown" class="dropdown-menu w-100"
                                                 style="position: absolute; z-index: 1000; display: none; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-top: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
                                             </div>
@@ -189,7 +189,6 @@
                                                 <option th:each="sup : ${suppliers}" th:value="${sup.code}"
                                                     th:text="${sup.code + ' - ' + sup.name}"></option>
                                             </select>
-
                                             <datalist id="supplierOptions">
                                                 <option th:each="sup : ${suppliers}"
                                                     th:value="${sup.name} + ' (' + ${sup.code} + ')'"

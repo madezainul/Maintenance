@@ -165,20 +165,21 @@
 							</a>
 						</li>
 
-						<!-- Parts -->
-						<!-- <li class="nav-item" th:classappend="${title == 'Parts Inventory'} ? 'active' : ''">
-							<a th:href="@{/parts}">
-								<i class="fas fa-toolbox"></i>
-								<p class="nav-label">Parts Inventory</p>
-							</a>
-						</li> -->
-
 						<!-- Code Generator -->
 						<li class="nav-item" th:classappend="${title == 'Code Generator'} ? 'active' : ''">
 							<a th:href="@{/code-generator}">
 								<i class="fas fa-barcode"></i>
 								<p class="nav-label">Code Generator</p>
 							</a>
+						</li>
+
+						<!-- Parts -->
+						<li class="nav-item" th:classappend="${title == 'Parts Inventory'} ? 'active' : ''">
+							<a th:href="@{/parts}">
+								<i class="fas fa-toolbox"></i>
+								<p class="nav-label">Parts Inventory</p>
+							</a>
+						</li>
 
 						<!-- Reports (Optional)
 						<li class="nav-item">

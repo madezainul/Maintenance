@@ -6,16 +6,13 @@ import org.springframework.stereotype.Service;
 
 import ahqpck.maintenance.report.dto.CategoryDTO;
 import ahqpck.maintenance.report.entity.Category;
-import ahqpck.maintenance.report.entity.MachineType;
 import ahqpck.maintenance.report.repository.CategoryRepository;
-import ahqpck.maintenance.report.repository.MachineTypeRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepo;
-    private final MachineTypeRepository machineTypeRepo;
 
     public List<Category> getAll() {
         return categoryRepo.findAll();
@@ -27,15 +24,13 @@ public class CategoryService {
     }
 
     public Category createCategory(CategoryDTO dto) {
-        if (categoryRepo.existsByCodeIgnoreCaseAndNameNot(dto.getCode(), dto.getName()))
-            throw new IllegalArgumentException("Duplicate category code: " + dto.getCode());
-        MachineType mt = machineTypeRepo.findByCode(dto.getMachineType().getCode())
-                .orElseThrow(() -> new IllegalArgumentException("Machine Type not found: " + dto.getMachineType().getCode()));
-            dto.getMachineType().getCode();
+        String code = dto.getCode().trim().toUpperCase();
+        String name = dto.getName().trim();
+        if (categoryRepo.findByCode(code).isPresent())
+            throw new IllegalArgumentException("Duplicate code.");
         Category cat = new Category();
-        cat.setCode(dto.getCode().trim().toUpperCase());
-        cat.setName(dto.getName().trim());
-        cat.setMachineType(mt);
+        cat.setCode(code);
+        cat.setName(name.trim());
         return categoryRepo.save(cat);
     }
 }

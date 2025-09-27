@@ -17,5 +17,5 @@ public class SubcategoryDTO {
     @NotBlank(message = "Name is mandatory")
     private String name;
     
-    private CategoryDTO category;
+    // private CategoryDTO category;
 }

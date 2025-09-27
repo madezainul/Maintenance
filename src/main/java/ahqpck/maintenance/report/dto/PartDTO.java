@@ -17,10 +17,17 @@ public class PartDTO {
 
     @NotBlank(message = "Name is mandatory")
     private String name;
+    
+    @NotNull(message = "Category is mandatory")
+    private String categoryName;
+
+    @NotBlank(message = "Supplier is mandatory")
+    private String supplierName;
+
+    @NotBlank(message = "Section is mandatory")
+    private String sectionCode;
 
     private String description;
-    private String category;
-    private String supplier;
     private String image;
 
     @NotNull(message = "Stock quantity is required")

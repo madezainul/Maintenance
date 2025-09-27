@@ -6,6 +6,7 @@ import ahqpck.maintenance.report.util.Base62;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class SerialNumber {
 
     @Id
@@ -26,11 +28,6 @@ public class SerialNumber {
 
     @Column(nullable = false)
     private String name;
-
-    // Many Serial Numbers → One Subcategory
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subcategory_code", nullable = false)
-    private Subcategory subcategory;
 
     @PrePersist
     public void prePersist() {

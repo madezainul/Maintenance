@@ -54,14 +54,14 @@
                             <div class="invalid-feedback" th:if="${#fields.hasErrors('code')}" th:errors="*{code}">Code
                                 is required.</div>
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="categoryMachineType">Machine Type</label>
                             <select class="form-control" id="categoryMachineType" th:field="*{machineType.code}" required>
                                 <option value="">Select Machine Type</option>
                                 <option th:each="machineType : ${machineTypes}" th:value="${machineType.code}"
                                     th:text="${machineType.name}"></option>
                             </select>
-                        </div>
+                        </div> -->
                         <button type="submit" class="btn btn-primary">Save</button>
                     </form>
                 </div>
@@ -96,14 +96,14 @@
                             <div class="invalid-feedback" th:if="${#fields.hasErrors('code')}" th:errors="*{code}">Code
                                 is required.</div>
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="subcategoryCategory">Category</label>
                             <select class="form-control" id="subcategoryCategory" th:field="*{category.code}" required>
                                 <option value="">Select Category</option>
                                 <option th:each="category : ${categories}" th:value="${category.code}"
                                     th:text="${category.name}"></option>
                             </select>
-                        </div>
+                        </div> -->
                         <button type="submit" class="btn btn-primary">Save</button>
                     </form>
                 </div>
@@ -137,14 +137,14 @@
                             <div class="invalid-feedback" th:if="${#fields.hasErrors('code')}" th:errors="*{code}">Code
                                 is required.</div>
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="serialNumberSubcategory">Subcategory</label>
                             <select class="form-control" id="serialNumberSubcategory" th:field="*{subcategory.code}" required>
                                 <option value="">Select Subcategory</option>
                                 <option th:each="subcategory : ${subcategories}" th:value="${subcategory.code}"
                                     th:text="${subcategory.name}"></option>
                             </select>
-                        </div>
+                        </div> -->
                         <button type="submit" class="btn btn-primary">Save</button>
                     </form>
                 </div>
@@ -166,15 +166,23 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form th:action="@{/code-generator/save-supplier}" method="post" id="addSupplierForm">
-                        <div class="form-group">
-                            <label for="supplierCode">Code</label>
-                            <input type="text" class="form-control" id="supplierCode" name="code" required>
-                        </div>
+                    <form th:object="${supplierDTO}" th:action="@{/code-generator/save-supplier}" method="post" id="addSupplierForm">
                         <div class="form-group">
                             <label for="supplierName">Name</label>
-                            <input type="text" class="form-control" id="supplierName" name="name" required>
+                            <input type="text" class="form-control" id="supplierName" th:field="*{name}" required>
                         </div>
+                        <div class="form-group">
+                            <label for="supplierCode">Code</label>
+                            <input type="text" class="form-control" id="supplierCode" th:field="*{code}" required>
+                        </div>
+                        <!-- <div class="form-group">
+                            <label for="supplierSerialNumber">Serial Number</label>
+                            <select class="form-control" id="supplierSerialNumber" th:field="*{serialNumber.code}" required>
+                                <option value="">Select Serial Number</option>
+                                <option th:each="serialNumber : ${serialNumbers}" th:value="${serialNumber.code}"
+                                    th:text="${serialNumber.name}"></option>
+                            </select>
+                        </div> -->
                         <button type="submit" class="btn btn-primary">Save</button>
                     </form>
                 </div>

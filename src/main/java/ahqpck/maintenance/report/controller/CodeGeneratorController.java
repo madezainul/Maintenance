@@ -75,6 +75,9 @@ public class CodeGeneratorController {
         // modal serial number
         model.addAttribute("serialNumberDTO", new SerialNumberDTO());
 
+        // modal supplier
+        model.addAttribute("supplierDTO", new SupplierDTO());
+
         return "code-generator/index";
     }
 

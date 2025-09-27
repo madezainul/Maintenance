@@ -16,6 +16,4 @@ public class CategoryDTO {
 
     @NotBlank(message = "Name is mandatory")
     private String name;
-    
-    private MachineTypeDTO machineType;
 }

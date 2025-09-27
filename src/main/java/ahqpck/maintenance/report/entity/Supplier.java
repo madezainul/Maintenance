@@ -1,18 +1,12 @@
 package ahqpck.maintenance.report.entity;
 
-import java.util.List;
 import java.util.UUID;
 
 import ahqpck.maintenance.report.util.Base62;
 
-import java.util.ArrayList;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
@@ -31,15 +25,12 @@ public class Supplier {
     @Column(length = 22, updatable = false, nullable = false)
     private String id;
 
-    @Column(nullable = false, length = 2, unique = true)
-    @Size(max = 2)
+    @Column(nullable = false, length = 1, unique = true)
+    @Size(max = 1)
     private String code;
 
     @Column(nullable = false)
     private String name;
-
-    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Item> items = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {

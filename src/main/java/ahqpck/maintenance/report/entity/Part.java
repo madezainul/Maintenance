@@ -31,11 +31,16 @@ public class Part {
     @Column(nullable = false)
     private String name;
 
+    @Column(name = "category_name", nullable = false)
+    private String categoryName;
+
+    @Column(name = "supplier_name", nullable = false)
+    private String supplierName;
+
+    @Column(name = "section_code", nullable = false)
+    private String sectionCode;
+
     private String description;
-
-    private String category;
-
-    private String supplier;
 
     private String image;
 

@@ -41,22 +41,74 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Category</label>
-                                    <input type="text" class="form-control" th:field="*{category}">
+                                    <!-- <input type="text" class="form-control" th:field="*{category}"> -->
+                                    <input type="text" class="form-control" id="categoryInput"
+                                        placeholder="Search category by Name or Code" autocomplete="off" required />
+                                    <div id="categoryDropdown" class="dropdown-menu w-100"
+                                        style="position: absolute; z-index: 1000; display: none; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-top: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                    </div>
+                                    <select class="d-none" name="categoryName" id="categorySelect">
+                                        <option th:each="cat : ${categories}" th:value="${cat.name}"
+                                            th:text="${cat.code + ' - ' + cat.name}"></option>
+                                    </select>
+                                    <datalist id="categoryOptions">
+                                        <option th:each="cat : ${categories}"
+                                            th:value="${cat.name} + ' (' + ${cat.id} + ')'"
+                                            th:data-category-id="${cat.id}">
+                                        </option>
+                                    </datalist>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Supplier</label>
-                                    <input type="text" class="form-control" th:field="*{supplier}">
+                                    <!-- <input type="text" class="form-control" th:field="*{supplier}"> -->
+                                    <input type="text" class="form-control" id="supplierInput"
+                                        placeholder="Search Supplier/SN" required />
+                                    <div id="supplierDropdown" class="dropdown-menu w-100"
+                                        style="position: absolute; z-index: 1000; display: none; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-top: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                    </div>
+                                    <select class="d-none" name="supplierName" id="supplierSelect">
+                                        <option th:each="sup : ${suppliers}" th:value="${sup.name}"
+                                            th:text="${sup.code + ' - ' + sup.name}"></option>
+                                    </select>
+                                    <datalist id="supplierOptions">
+                                        <option th:each="sup : ${suppliers}"
+                                            th:value="${sup.name} + ' (' + ${sup.code} + ')'"
+                                            th:data-supplier-id="${sup.id}"></option>
+                                    </datalist>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Description -->
-                        <div class="form-group">
-                            <label>Description</label>
-                            <textarea class="form-control" th:field="*{description}" rows="3"
-                                placeholder="Enter item description..."></textarea>
+                        <div class="form-row">
+                            <!-- Section -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Section</label>
+                                    <input type="text" class="form-control" id="sectionInput"
+                                        placeholder="Enter Section" required />
+                                    <div id="sectionDropdown" class="dropdown-menu w-100"
+                                        style="position: absolute; z-index: 1000; display: none; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-top: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                    </div>
+                                    <select class="d-none" name="sectionName" id="sectionSelect">
+                                        <option th:each="sec : ${sections}" th:value="${sec.code}"
+                                            th:text="${sec.code}"></option>
+                                    </select>
+                                    <datalist id="sectionOptions">
+                                        <option th:each="sec : ${sections}" th:value="${sec.code}"
+                                            th:data-section-id="${sec.id}"></option>
+                                    </datalist>
+                                </div>
+                            </div>
+                            <!-- Description -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea class="form-control" th:field="*{description}" rows="3"
+                                        placeholder="Enter item description..."></textarea>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Image Upload -->
@@ -141,22 +193,83 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Category</label>
-                                    <input type="text" class="form-control" id="editCategory" name="category">
+                                    <!-- <input type="text" class="form-control" id="editCategory" name="category"> -->
+                                    <input type="text" class="form-control" id="editCategoryInput" name="categoryName"
+                                        placeholder="Search category by Name or Code" autocomplete="off" required />
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('categoryName')}"
+                                        th:errors="*{categoryName}">Please enter a unique category name.</div>
+                                    <div id="editCategoryDropdown" class="dropdown-menu w-100"
+                                        style="position: absolute; z-index: 1000; display: none; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-top: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                    </div>
+                                    <select class="d-none" name="categoryName" id="editCategorySelect">
+                                        <option th:each="cat : ${editCategories}" th:value="${cat.name}"
+                                            th:text="${cat.code + ' - ' + cat.name}"></option>
+                                    </select>
+                                    <datalist id="editCategoryOptions">
+                                        <option th:each="cat : ${editCategories}"
+                                            th:value="${cat.name} + ' (' + ${cat.id} + ')'"
+                                            th:data-category-id="${cat.id}">
+                                        </option>
+                                    </datalist>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Supplier</label>
-                                    <input type="text" class="form-control" id="editSupplier" name="supplier">
+                                    <!-- <input type="text" class="form-control" id="editSupplier" name="supplier"> -->
+                                    <input type="text" class="form-control" id="editSupplierInput" name="supplierName"
+                                        placeholder="Search Supplier/SN" required />
+                                    <div id="editSupplierDropdown" class="dropdown-menu w-100"
+                                        style="position: absolute; z-index: 1000; display: none; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-top: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                    </div>
+                                    <select class="d-none" name="supplierName" id="editSupplierSelect">
+                                        <option th:each="sup : ${editSuppliers}" th:value="${sup.name}"
+                                            th:text="${sup.code + ' - ' + sup.name}"></option>
+                                    </select>
+                                    <datalist id="editSupplierOptions">
+                                        <option th:each="sup : ${editSuppliers}"
+                                            th:value="${sup.name} + ' (' + ${sup.code} + ')'"
+                                            th:data-supplier-id="${sup.id}"></option>
+                                    </datalist>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Description -->
-                        <div class="form-group">
-                            <label>Description</label>
-                            <textarea class="form-control" id="editDescription" name="description" rows="3"
-                                placeholder="Enter item description..."></textarea>
+                        <div class="form-row">
+                            <!-- Section -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Section</label>
+                                    <input type="text" class="form-control" id="editSectionInput" name="editSection"
+                                        placeholder="Enter Section" required />
+                                    <div id="editSectionDropdown" class="dropdown-menu w-100"
+                                        style="position: absolute; z-index: 1000; display: none; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-top: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                    </div>
+                                    <select class="d-none" name="sectionCode" id="editSectionSelect">
+                                        <option th:each="sec : ${editSections}" th:value="${sec.code}"
+                                            th:text="${sec.code}"></option>
+                                    </select>
+                                    <datalist id="editSectionOptions">
+                                        <option th:each="sec : ${editSections}" th:value="${sec.code}"
+                                            th:data-section-id="${sec.id}"></option>
+                                    </datalist>
+                                </div>
+                            </div>
+                            <!-- Description -->
+                            <div class="col-md-6">
+                                <!-- <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea class="form-control" th:field="*{description}" rows="3"
+                                        placeholder="Enter item description..."></textarea>
+                                </div> -->
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea class="form-control" id="editDescription" name="description" rows="3"
+                                        placeholder="Enter item description..."></textarea>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}"
+                                        th:errors="*{description}">Please enter a description.</div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Image Upload & Management -->
@@ -274,15 +387,107 @@
 
                     <!-- Modal Footer -->
                     <div class="modal-footer">
-                        <button type="button"
-                            class="btn"
-                            th:classappend="${error} ? 'btn-danger' : 'btn-success'"
+                        <button type="button" class="btn" th:classappend="${error} ? 'btn-danger' : 'btn-success'"
                             data-dismiss="modal">OK</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function setupLiveSearch(inputId, selectId, optionsContainerId, fieldLabel = 'item') {
+            const input = document.getElementById(inputId);
+            const select = document.getElementById(selectId);
+            const dropdown = document.getElementById(`${inputId.replace('Input', 'Dropdown')}`);
+            const options = Array.from(select.options)
+                .filter(opt => opt.value) // skip empty option
+                .map(opt => ({
+                    value: opt.value,
+                    label: opt.text,
+                    id: opt.dataset.id || opt.dataset.code || ''
+                }));
+
+            if (!input || !select || !dropdown) {
+                console.warn(`Missing elements for ${inputId}`);
+                return;
+            }
+
+            input.addEventListener('input', function () {
+                const term = this.value.toLowerCase().trim();
+                dropdown.innerHTML = '';
+                if (term === '') {
+                    dropdown.style.display = 'none';
+                    select.value = '';
+                    return;
+                }
+                const filtered = options.filter(opt =>
+                    opt.label.toLowerCase().includes(term)
+                );
+                if (filtered.length === 0) {
+                    dropdown.style.display = 'none';
+                    return;
+                }
+                filtered.forEach(opt => {
+                    const div = document.createElement('div');
+                    div.className = 'dropdown-item';
+                    div.style.cursor = 'pointer';
+                    div.style.whiteSpace = 'normal';
+                    const regex = new RegExp(`(${term})`, 'gi');
+                    const highlighted = opt.label.replace(regex, '<strong>$1</strong>');
+                    div.innerHTML = highlighted;
+                    div.addEventListener('click', () => {
+                        input.value = opt.label;
+                        select.value = opt.value;
+                        dropdown.style.display = 'none';
+                        input.focus();
+                    });
+                    dropdown.appendChild(div);
+                });
+                dropdown.style.display = 'block';
+            });
+            document.addEventListener('click', function (e) {
+                if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+            input.addEventListener('keydown', function (e) {
+                const items = dropdown.querySelectorAll('.dropdown-item');
+                if (items.length === 0) return;
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    let current = Array.from(items).findIndex(item => item.classList.contains('active'));
+                    current = (current + 1) % items.length;
+                    items.forEach(item => item.classList.remove('active'));
+                    items[current].classList.add('active');
+                    items[current].scrollIntoView({ block: 'nearest' });
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    let current = Array.from(items).findIndex(item => item.classList.contains('active'));
+                    current = current <= 0 ? items.length - 1 : current - 1;
+                    items.forEach(item => item.classList.remove('active'));
+                    items[current].classList.add('active');
+                    items[current].scrollIntoView({ block: 'nearest' });
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const active = dropdown.querySelector('.dropdown-item.active');
+                    if (active) {
+                        active.click();
+                    }
+                } else if (e.key === 'Escape') {
+                    dropdown.style.display = 'none';
+                }
+            });
+        }
+        $(document).ready(function () {
+            setupLiveSearch('categoryInput', 'categorySelect', 'categoryOptions', 'category');
+            setupLiveSearch('supplierInput', 'supplierSelect', 'supplierOptions', 'supplier');
+            setupLiveSearch('sectionInput', 'sectionSelect', 'sectionOptions', 'section');
+            setupLiveSearch('editCategoryInput', 'editCategorySelect', 'editCategoryOptions', 'category');
+            setupLiveSearch('editSupplierInput', 'editSupplierSelect', 'editSupplierOptions', 'supplier');
+            setupLiveSearch('editSectionInput', 'editSectionSelect', 'editSectionOptions', 'section');
+        });
+    </script>
 
     <script>
         document.getElementById('addImageInput').onchange = function (evt) {

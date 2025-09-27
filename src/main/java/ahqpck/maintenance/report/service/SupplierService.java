@@ -5,9 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import ahqpck.maintenance.report.dto.MachineTypeDTO;
 import ahqpck.maintenance.report.dto.SupplierDTO;
-import ahqpck.maintenance.report.entity.MachineType;
 import ahqpck.maintenance.report.entity.Supplier;
 import ahqpck.maintenance.report.repository.SupplierRepository;
 import lombok.RequiredArgsConstructor;

@@ -17,5 +17,5 @@ public class SerialNumberDTO {
     @NotBlank(message = "Name is mandatory")
     private String name;
 
-    private SubcategoryDTO subcategory;
+    // private SubcategoryDTO subcategory;
 }

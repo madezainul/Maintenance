@@ -17,4 +17,6 @@ public interface PartRepository extends JpaRepository<Part, String>, JpaSpecific
 
     // Optional: For update case, exclude current ID
     boolean existsByCodeIgnoreCaseAndIdNot(String code, String id);
+
+    boolean existsByCodeIgnoreCaseAndNameNot(String code, String name);
 }

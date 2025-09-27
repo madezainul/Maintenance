@@ -6,16 +6,13 @@ import org.springframework.stereotype.Service;
 
 import ahqpck.maintenance.report.dto.SerialNumberDTO;
 import ahqpck.maintenance.report.entity.SerialNumber;
-import ahqpck.maintenance.report.entity.Subcategory;
 import ahqpck.maintenance.report.repository.SerialNumberRepository;
-import ahqpck.maintenance.report.repository.SubcategoryRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class SerialNumberService {
     private final SerialNumberRepository serialNumberRepo;
-    private final SubcategoryRepository subcategoryRepo;
 
     public List<SerialNumber> getAll() {
         return serialNumberRepo.findAll();
@@ -27,14 +24,13 @@ public class SerialNumberService {
     }
 
     public SerialNumber createSerialNumber(SerialNumberDTO dto) {
-        if (serialNumberRepo.existsByCodeIgnoreCaseAndNameNot(dto.getCode(), dto.getName()))
-            throw new IllegalArgumentException("Duplicate serial number code: " + dto.getCode());
-        Subcategory subcat = subcategoryRepo.findByCode(dto.getSubcategory().getCode())
-                .orElseThrow(() -> new IllegalArgumentException("Subcategory not found: " + dto.getSubcategory().getCode()));
+        String code = dto.getCode().trim().toUpperCase();
+        String name = dto.getName().trim();
+        if (serialNumberRepo.findByCode(code).isPresent())
+            throw new IllegalArgumentException("Duplicate code.");
         SerialNumber sn = new SerialNumber();
-        sn.setCode(dto.getCode().trim().toUpperCase());
-        sn.setName(dto.getName().trim());
-        sn.setSubcategory(subcat);
+        sn.setCode(code);
+        sn.setName(name.trim());
         return serialNumberRepo.save(sn);
     }
 }

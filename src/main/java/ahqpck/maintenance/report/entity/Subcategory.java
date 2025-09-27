@@ -1,24 +1,17 @@
 package ahqpck.maintenance.report.entity;
 
-import java.util.List;
 import java.util.UUID;
 
 import ahqpck.maintenance.report.util.Base62;
 
-import java.util.ArrayList;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -27,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Subcategory {
 
     @Id
@@ -39,13 +33,6 @@ public class Subcategory {
 
     @Column(nullable = false)
     private String name;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_code", nullable = false)
-    private Category category;
-
-    @OneToMany(mappedBy = "subcategory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<SerialNumber> serialNumbers = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {

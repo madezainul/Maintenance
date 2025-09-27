@@ -45,6 +45,7 @@
                             Excel</a>
                         <a class="dropdown-item" href="#"><i class="fa fa-file-pdf mr-2 text-danger"></i> PDF</a>
                     </div>
+                    <div th:replace="~{part/modal :: modal}"></div>
                     <button class="btn btn-primary ml-auto mt-2" data-toggle="modal" data-target="#addRowModal">
                         <i class="fa fa-plus-circle mr-2"></i> Add
                     </button>
@@ -128,6 +129,7 @@
                                             <th>Name</th>
                                             <th>Category</th>
                                             <th>Supplier</th>
+                                            <th>Section</th>
                                             <th>Quantity</th>
                                             <th>Description</th>
                                             <th>Image</th>
@@ -140,8 +142,10 @@
                                             th:if="${parts.totalElements > 0}">
                                             <td data-field="code" th:text="${part.code}"></td>
                                             <td data-field="name" th:text="${part.name}"></td>
-                                            <td data-field="category" th:text="${part.category}"></td>
-                                            <td data-field="supplier" th:text="${part.supplier}">
+                                            <td data-field="categoryName" th:text="${part.categoryName}"></td>
+                                            <td data-field="supplierName" th:text="${part.supplierName}">
+                                            </td>
+                                            <td data-field="sectionCode" th:text="${part.sectionCode}">
                                             </td>
                                             <td data-field="stockQuantity" class="text-center"
                                                 th:text="${part.stockQuantity}">
@@ -265,45 +269,48 @@
                         form.submit();
                     });
                 });
+
+                $(document).ready(function () {
+                    // --- Edit Modal Trigger ---
+                    $('.edit-row').on('click', function () {
+                        const row = $(this).closest('tr');
+                        const currentId = $(this).data('id');
+
+                        // Populate form fields
+                        $('#editId').val(currentId);
+                        $('#editCode').val(row.find('[data-field="code"]').text().trim());
+                        $('#editName').val(row.find('[data-field="name"]').text().trim());
+                        $('#editCategoryInput').val(row.find('[data-field="categoryName"]').text().trim());
+                        $('#editSupplierInput').val(row.find('[data-field="supplierName"]').text().trim());
+                        $('#editSectionInput').val(row.find('[data-field="sectionCode"]').text().trim());
+                        $('#editStockQuantity').val(row.find('[data-field="stockQuantity"]').text().trim());
+                        $('#editDescription').val(row.find('[data-field="description"]').text().trim());
+
+                        // Set image preview if exists
+                        const imgSrc = row.find('[data-field="image"] img').attr('src');
+                        if (imgSrc) {
+                            $('#editImagePreview').attr('src', imgSrc).show();
+                        } else {
+                            $('#editImagePreview').hide();
+                        }
+
+                        // Show modal
+                        $('#editRowModal').modal('show');
+                    });
+
+                    // --- Delete Modal Trigger ---
+                    $('.delete-row').on('click', function () {
+                        const name = $(this).data('name');
+                        const id = $(this).data('id');
+
+                        $('#deleteDocName').text(name);
+                        $('#confirmDeleteButton').attr('href', '/parts/delete/' + encodeURIComponent(id));
+                        $('#deleteRowModal').modal('show');
+                    });
+                });
             });
 
-            $(document).ready(function () {
-                // --- Edit Modal Trigger ---
-                $('.edit-row').on('click', function () {
-                    const row = $(this).closest('tr');
-                    const currentId = $(this).data('id');
 
-                    // Populate form fields
-                    $('#editId').val(currentId);
-                    $('#editCode').val(row.find('[data-field="code"]').text().trim());
-                    $('#editName').val(row.find('[data-field="name"]').text().trim());
-                    $('#editCategory').val(row.find('[data-field="category"]').text().trim());
-                    $('#editSupplier').val(row.find('[data-field="supplier"]').text().trim());
-                    $('#editStockQuantity').val(row.find('[data-field="stockQuantity"]').text().trim());
-                    $('#editDescription').val(row.find('[data-field="description"]').text().trim());
-
-                    // Set image preview if exists
-                    const imgSrc = row.find('[data-field="image"] img').attr('src');
-                    if (imgSrc) {
-                        $('#editImagePreview').attr('src', imgSrc).show();
-                    } else {
-                        $('#editImagePreview').hide();
-                    }
-
-                    // Show modal
-                    $('#editRowModal').modal('show');
-                });
-
-                // --- Delete Modal Trigger ---
-                $('.delete-row').on('click', function () {
-                    const name = $(this).data('name');
-                    const id = $(this).data('id');
-
-                    $('#deleteDocName').text(name);
-                    $('#confirmDeleteButton').attr('href', '/parts/delete/' + encodeURIComponent(id));
-                    $('#deleteRowModal').modal('show');
-                });
-            });
 
             $(document).ready(function () {
                 // Check if the modal container exists (meaning a flash message was present)
@@ -318,3 +325,238 @@
 </body>
 
 </html>
+
+<th:block layout:fragment="scripts">
+    <!-- <script>
+        function setupLiveSearch(inputId, selectId, optionsContainerId, fieldLabel = 'item') {
+            const input = document.getElementById(inputId);
+            const select = document.getElementById(selectId);
+            const dropdown = document.getElementById(`${inputId.replace('Input', 'Dropdown')}`);
+            const options = Array.from(select.options)
+                .filter(opt => opt.value) // skip empty option
+                .map(opt => ({
+                    value: opt.value,
+                    label: opt.text,
+                    id: opt.dataset.id || opt.dataset.code || ''
+                }));
+
+            if (!input || !select || !dropdown) {
+                console.warn(`Missing elements for ${inputId}`);
+                return;
+            }
+
+            input.addEventListener('input', function () {
+                const term = this.value.toLowerCase().trim();
+                dropdown.innerHTML = '';
+                if (term === '') {
+                    dropdown.style.display = 'none';
+                    select.value = '';
+                    return;
+                }
+                const filtered = options.filter(opt =>
+                    opt.label.toLowerCase().includes(term)
+                );
+                if (filtered.length === 0) {
+                    dropdown.style.display = 'none';
+                    return;
+                }
+                filtered.forEach(opt => {
+                    const div = document.createElement('div');
+                    div.className = 'dropdown-item';
+                    div.style.cursor = 'pointer';
+                    div.style.whiteSpace = 'normal';
+                    const regex = new RegExp(`(${term})`, 'gi');
+                    const highlighted = opt.label.replace(regex, '<strong>$1</strong>');
+                    div.innerHTML = highlighted;
+                    div.addEventListener('click', () => {
+                        input.value = opt.label;
+                        select.value = opt.value;
+                        dropdown.style.display = 'none';
+                        input.focus();
+                    });
+                    dropdown.appendChild(div);
+                });
+                dropdown.style.display = 'block';
+            });
+            document.addEventListener('click', function (e) {
+                if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+            input.addEventListener('keydown', function (e) {
+                const items = dropdown.querySelectorAll('.dropdown-item');
+                if (items.length === 0) return;
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    let current = Array.from(items).findIndex(item => item.classList.contains('active'));
+                    current = (current + 1) % items.length;
+                    items.forEach(item => item.classList.remove('active'));
+                    items[current].classList.add('active');
+                    items[current].scrollIntoView({ block: 'nearest' });
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    let current = Array.from(items).findIndex(item => item.classList.contains('active'));
+                    current = current <= 0 ? items.length - 1 : current - 1;
+                    items.forEach(item => item.classList.remove('active'));
+                    items[current].classList.add('active');
+                    items[current].scrollIntoView({ block: 'nearest' });
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const active = dropdown.querySelector('.dropdown-item.active');
+                    if (active) {
+                        active.click();
+                    }
+                } else if (e.key === 'Escape') {
+                    dropdown.style.display = 'none';
+                }
+            });
+        }
+        $(document).ready(function () {
+            setupLiveSearch('categoryInput', 'categorySelect', 'categoryOptions');
+            setupLiveSearch('supplierInput', 'supplierSelect', 'supplierOptions', 'supplier');
+            setupLiveSearch('sectionInput', 'sectionSelect', 'sectionOptions', 'section');
+        });
+    </script> -->
+
+    <!-- <script>
+        // === UNIVERSAL LIVE SEARCH INITIALIZER ===
+        function initLiveSearch(inputId, dropdownId, hiddenFieldId, endpoint) {
+            const $input = $(`#${inputId}`);
+            const $dropdown = $(`#${dropdownId}`);
+            const $hidden = $(`#${hiddenFieldId}`);
+
+            if (!$input.length || !$dropdown.length || !$hidden.length) {
+                console.warn(`Missing elements for ${inputId}`);
+                return;
+            }
+
+            $input.off('input').on('input', function () {
+                const term = $(this).val().trim().toLowerCase();
+                $dropdown.empty();
+
+                if (!term) {
+                    $dropdown.hide();
+                    $hidden.val('');
+                    return;
+                }
+
+                $.get(`/api/${endpoint}`, { term }, function (data) {
+                    if (data.length === 0) {
+                        $dropdown.append('<div class="dropdown-item disabled">No matches</div>');
+                        $dropdown.show();
+                        return;
+                    }
+
+                    data.forEach(item => {
+                        const $div = $(`<div class="dropdown-item" style="cursor:pointer;padding:8px;">
+                    <strong>${item.code}</strong> – ${item.name}
+                </div>`);
+
+                        $div.on('click', function () {
+                            $input.val(`${item.code} - ${item.name}`);
+                            $hidden.val(item.id);
+                            $dropdown.hide();
+                            $input.focus();
+                        });
+
+                        $dropdown.append($div);
+                    });
+
+                    // Position dropdown below input
+                    const rect = $input[0].getBoundingClientRect();
+                    $dropdown.css({
+                        'top': `${rect.bottom + window.scrollY}px`,
+                        'left': `${rect.left + window.scrollX}px`,
+                        'width': `${rect.width}px`
+                    });
+                    $dropdown.show();
+                }).fail(() => {
+                    $dropdown.append('<div class="dropdown-item text-danger">Error loading</div>');
+                    $dropdown.show();
+                });
+            });
+
+            // Hide on escape or click outside
+            $(document).off('click.dropdown').on('click.dropdown', function (e) {
+                if (!$input.is(e.target) && !$dropdown.is(e.target) && !$dropdown.has(e.target).length) {
+                    $dropdown.hide();
+                }
+            });
+
+            // Keyboard navigation
+            $input.off('keydown').on('keydown', function (e) {
+                const $items = $dropdown.find('.dropdown-item:visible');
+                if ($items.length === 0) return;
+
+                let index = $items.index($dropdown.find('.active'));
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    index = (index + 1) % $items.length;
+                    $items.removeClass('active').eq(index).addClass('active');
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    index = index <= 0 ? $items.length - 1 : index - 1;
+                    $items.removeClass('active').eq(index).addClass('active');
+                } else if (e.key === 'Enter' && index >= 0) {
+                    e.preventDefault();
+                    $items.eq(index).click();
+                } else if (e.key === 'Escape') {
+                    $dropdown.hide();
+                }
+            });
+        }
+
+        // === INITIALIZE ON PAGE LOAD ===
+        $(document).ready(function () {
+            initLiveSearch('categoryInput', 'categoryDropdown', 'categoryId', 'categories');
+            initLiveSearch('supplierInput', 'supplierDropdown', 'supplierId', 'suppliers');
+            initLiveSearch('sectionInput', 'sectionDropdown', 'sectionId', 'sections');
+
+            // --- EDIT MODAL: Re-init when opened ---
+            $('#editRowModal').on('shown.bs.modal', function () {
+                initLiveSearch('editCategoryInput', 'categoryDropdown', 'editCategoryId', 'categories');
+                initLiveSearch('editSupplierInput', 'supplierDropdown', 'editSupplierId', 'suppliers');
+                initLiveSearch('editSectionInput', 'sectionDropdown', 'editSectionId', 'sections');
+            });
+
+            // --- POPULATE EDIT MODAL ---
+            $('.edit-row').on('click', function () {
+                const row = $(this).closest('tr');
+                const id = $(this).data('id');
+
+                $('#editId').val(id);
+                $('#editCode').val(row.find('[data-field="code"]').text().trim());
+                $('#editName').val(row.find('[data-field="name"]').text().trim());
+                $('#editStockQuantity').val(row.find('[data-field="stockQuantity"]').text().trim());
+                $('#editDescription').val(row.find('[data-field="description"]').text().trim());
+
+                // Set display value and hidden ID
+                const categoryName = $(this).data('category-name');
+                const categoryId = $(this).data('category-id');
+                $('#editCategoryInput').val(categoryName);
+                $('#editCategoryId').val(categoryId);
+
+                const supplierName = $(this).data('supplier-name');
+                const supplierId = $(this).data('supplier-id');
+                $('#editSupplierInput').val(supplierName);
+                $('#editSupplierId').val(supplierId);
+
+                const sectionName = $(this).data('section-name');
+                const sectionId = $(this).data('section-id');
+                $('#editSectionInput').val(sectionName);
+                $('#editSectionId').val(sectionId);
+
+                $('#editDescription').val(row.find('[data-field="description"]').text().trim());
+
+                // Image preview
+                const imgSrc = row.find('[data-field="image"] img').attr('src');
+                if (imgSrc) {
+                    $('#editImagePreview').attr('src', imgSrc).show();
+                } else {
+                    $('#editImagePreview').hide();
+                }
+            });
+        });
+    </script> -->
+</th:block>

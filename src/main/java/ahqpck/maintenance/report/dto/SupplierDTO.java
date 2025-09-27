@@ -16,4 +16,6 @@ public class SupplierDTO {
 
     @NotBlank(message = "Name is mandatory")
     private String name;
+
+    // private SerialNumberDTO serialNumber;
 }

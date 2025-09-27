@@ -3,7 +3,6 @@ package ahqpck.maintenance.report.dto;
 import org.springframework.stereotype.Component;
 
 import ahqpck.maintenance.report.entity.Category;
-import ahqpck.maintenance.report.entity.Item;
 import ahqpck.maintenance.report.entity.MachineType;
 import ahqpck.maintenance.report.entity.Section;
 import ahqpck.maintenance.report.entity.SerialNumber;
@@ -27,7 +26,7 @@ public class DTOMapper {
         dto.setId(cat.getId());
         dto.setName(cat.getName());
         dto.setCode(cat.getCode());
-        dto.setMachineType(mapToMachineTypeDTO(cat.getMachineType()));
+        // dto.setMachineType(mapToMachineTypeDTO(cat.getMachineType()));
 
         return dto;
     }
@@ -37,7 +36,7 @@ public class DTOMapper {
         dto.setId(subcat.getId());
         dto.setName(subcat.getName());
         dto.setCode(subcat.getCode());
-        dto.setCategory(mapToCategoryDTO(subcat.getCategory()));
+        // dto.setCategory(mapToCategoryDTO(subcat.getCategory()));
 
         return dto;
     }
@@ -47,7 +46,7 @@ public class DTOMapper {
         dto.setId(sn.getId());
         dto.setCode(sn.getCode());
         dto.setName(sn.getName());
-        dto.setSubcategory(mapToSubcategoryDTO(sn.getSubcategory()));
+        // dto.setSubcategory(mapToSubcategoryDTO(sn.getSubcategory()));
 
         return dto;
     }
@@ -57,6 +56,7 @@ public class DTOMapper {
         dto.setId(sup.getId());
         dto.setName(sup.getName());
         dto.setCode(sup.getCode());
+        // dto.setSerialNumber(mapToSerialNumberDTO(sup.getSerialNumber()));
 
         return dto;
     }
@@ -65,18 +65,6 @@ public class DTOMapper {
         SectionDTO dto = new SectionDTO();
         dto.setId(sec.getId());
         dto.setCode(sec.getCode());
-
-        return dto;
-    }
-
-    public ItemDTO mapToItemDTO(Item item) {
-        ItemDTO dto = new ItemDTO();
-        dto.setId(item.getId());
-        dto.setName(item.getName());
-        dto.setCode(item.getCode());
-        dto.setSerialNumber(mapToSerialNumberDTO(item.getSerialNumber()));
-        dto.setSupplier(mapToSupplierDTO(item.getSupplier()));
-        dto.setSection(mapToSectionDTO(item.getSection()));
 
         return dto;
     }
