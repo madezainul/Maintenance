@@ -91,7 +91,7 @@
                                     <div id="sectionDropdown" class="dropdown-menu w-100"
                                         style="position: absolute; z-index: 1000; display: none; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-top: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
                                     </div>
-                                    <select class="d-none" name="sectionName" id="sectionSelect">
+                                    <select class="d-none" name="sectionCode" id="sectionSelect">
                                         <option th:each="sec : ${sections}" th:value="${sec.code}"
                                             th:text="${sec.code}"></option>
                                     </select>
@@ -194,7 +194,7 @@
                                 <div class="form-group">
                                     <label>Category</label>
                                     <!-- <input type="text" class="form-control" id="editCategory" name="category"> -->
-                                    <input type="text" class="form-control" id="editCategoryInput" name="categoryName"
+                                    <input type="text" class="form-control" id="editCategoryInput"
                                         placeholder="Search category by Name or Code" autocomplete="off" required />
                                     <div class="invalid-feedback" th:if="${#fields.hasErrors('categoryName')}"
                                         th:errors="*{categoryName}">Please enter a unique category name.</div>
@@ -217,7 +217,7 @@
                                 <div class="form-group">
                                     <label>Supplier</label>
                                     <!-- <input type="text" class="form-control" id="editSupplier" name="supplier"> -->
-                                    <input type="text" class="form-control" id="editSupplierInput" name="supplierName"
+                                    <input type="text" class="form-control" id="editSupplierInput"
                                         placeholder="Search Supplier/SN" required />
                                     <div id="editSupplierDropdown" class="dropdown-menu w-100"
                                         style="position: absolute; z-index: 1000; display: none; max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-top: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
@@ -257,11 +257,6 @@
                             </div>
                             <!-- Description -->
                             <div class="col-md-6">
-                                <!-- <div class="form-group">
-                                    <label>Description</label>
-                                    <textarea class="form-control" th:field="*{description}" rows="3"
-                                        placeholder="Enter item description..."></textarea>
-                                </div> -->
                                 <div class="form-group">
                                     <label>Description</label>
                                     <textarea class="form-control" id="editDescription" name="description" rows="3"
@@ -479,6 +474,7 @@
                 }
             });
         }
+        let originalEditValues = {};
         $(document).ready(function () {
             setupLiveSearch('categoryInput', 'categorySelect', 'categoryOptions', 'category');
             setupLiveSearch('supplierInput', 'supplierSelect', 'supplierOptions', 'supplier');
@@ -486,6 +482,33 @@
             setupLiveSearch('editCategoryInput', 'editCategorySelect', 'editCategoryOptions', 'category');
             setupLiveSearch('editSupplierInput', 'editSupplierSelect', 'editSupplierOptions', 'supplier');
             setupLiveSearch('editSectionInput', 'editSectionSelect', 'editSectionOptions', 'section');
+
+            // Capture original values when edit modal is shown
+            $('#editRowModal').on('show.bs.modal', function () {
+                originalEditValues = {
+                    category: $('#editCategoryInput').val(),
+                    supplier: $('#editSupplierInput').val(),
+                    section: $('#editSectionInput').val()
+                };
+            });
+
+            // Prevent form submit if no changes
+            $('#formEdit').on('submit', function (e) {
+                // Set the input value to the selected code from the select
+                $('#editCategoryInput').val($('#editCategorySelect').val());
+                $('#editSupplierInput').val($('#editSupplierSelect').val());
+                $('#editSectionInput').val($('#editSectionSelect').val());
+                const currentValues = {
+                    category: $('#editCategoryInput').val(),
+                    supplier: $('#editSupplierInput').val(),
+                    section: $('#editSectionInput').val()
+                };
+                if (JSON.stringify(originalEditValues) === JSON.stringify(currentValues)) {
+                    e.preventDefault();
+                    alert('No changes detected.');
+                    return false;
+                }
+            });
         });
     </script>
 
